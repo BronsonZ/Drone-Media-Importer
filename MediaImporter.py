@@ -4,8 +4,6 @@ import datetime
 
 src_dir = "H:\\DCIM"
 media_src_dir = "H:\\DCIM\\100MEDIA"
-pano_src_dir = "H:\\DCIM\\PANORAMA"
-hyperlapse_src_dir = "H:\\DCIM\\HYPERLAPSE"
 dest_dir = "E:\\Dropbox\\Drone Imports"
 
 summary_array = []
