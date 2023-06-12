@@ -36,7 +36,6 @@ try:
 
         if os.path.exists(dest_file_path):
             print("File " + dest_file_path + " already exists, skipping")
-            num_files -= 1
             continue
 
         os.makedirs(os.path.dirname(dest_file_path), exist_ok=True)
@@ -48,13 +47,12 @@ try:
             count += 1
         except shutil.Error as e:
             print("Error copying file: " + str(e))
-            num_files -= 1
             continue
 
     print("Finished, copied " + str(count) + "/" + str(num_files))
     input("Press enter to exit")
     exit()
-    
+
 except KeyboardInterrupt:
     print("User interrupted, closing program, copied " + str(count) + "/" + str(num_files))
     input("Press enter to exit")
