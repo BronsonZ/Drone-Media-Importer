@@ -3,8 +3,7 @@ import shutil
 import datetime
 
 src_dir = "H:\\DCIM"
-media_src_dir = "H:\\DCIM\\100MEDIA"
-dest_dir = "E:\\Dropbox\\Drone Imports"
+dest_dir = "E:\\Dropbox\\Test Imports"
 
 summary_array = []
 
@@ -18,6 +17,7 @@ def is_video(file_path):
 
 def import_media():
     coppied_files = 0
+    media_src_dir = os.path.join(src_dir, "100MEDIA")
     num_files = len(os.listdir(media_src_dir))
     print("Importing Media: " + str(num_files) + " files")
     for file in os.listdir(media_src_dir):
