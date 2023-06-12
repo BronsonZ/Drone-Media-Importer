@@ -52,9 +52,12 @@ try:
             continue
 
     print("Finished, copied " + str(count) + "/" + str(num_files))
-
+    input("Press enter to exit")
+    exit()
+    
 except KeyboardInterrupt:
     print("User interrupted, closing program, copied " + str(count) + "/" + str(num_files))
+    input("Press enter to exit")
     exit()
 
 
