@@ -13,11 +13,9 @@ def is_video(file_path):
     video_extensions = ('.mp4', '.MP4', '.mov', '.MOV', '.srt', '.SRT')
     return file_path.endswith(video_extensions)
 
-count = 0
-
-num_files = len(os.listdir(src_dir))
-
 try:
+    count = 0
+    num_files = len(os.listdir(src_dir))
     for file in os.listdir(src_dir):
         src_file_path = os.path.join(src_dir, file)
 
