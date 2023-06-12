@@ -1,13 +1,13 @@
 import os
 import shutil
 import datetime
-import imghdr
 
 src_dir = "H:\\DCIM\\100MEDIA"
 dest_dir = "E:\\Dropbox\\Drone Imports"
 
 def is_image(file_path):
-    return imghdr.what(file_path) is not None
+    img_extensions = ('.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.gif', '.GIF', '.dng', '.DNG')
+    return file_path.endswith(img_extensions)
 
 def is_video(file_path):
     video_extensions = ('.mp4', '.MP4', '.mov', '.MOV', '.srt', '.SRT')
