@@ -3,7 +3,7 @@ import shutil
 import datetime
 
 src_dir = "H:\\DCIM"
-dest_dir = "E:\\Dropbox\\Test Imports"
+dest_dir = "E:\\Dropbox\\Drone Imports"
 
 summary_array = []
 
