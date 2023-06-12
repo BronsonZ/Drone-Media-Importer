@@ -105,7 +105,7 @@ def import_panorama_and_hyperlapse(dir):
     summary_array.append(dir + ": copied " + str(copied_dirs) + "/" + str(num_dirs) + " directories")
 
 try:
-    # import_media()
+    import_media()
     import_panorama_and_hyperlapse("PANORAMA")
     import_panorama_and_hyperlapse("HYPERLAPSE")
     print("Summary:")
