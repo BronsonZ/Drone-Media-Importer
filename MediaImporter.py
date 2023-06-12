@@ -16,7 +16,7 @@ def is_video(file_path):
     return file_path.endswith(video_extensions)
 
 def import_media():
-    coppied_files = 0
+    copied_files = 0
     media_src_dir = os.path.join(src_dir, "100MEDIA")
     num_files = len(os.listdir(media_src_dir))
     print("Importing Media: " + str(num_files) + " files")
@@ -49,15 +49,15 @@ def import_media():
             continue
 
         try:
-            print("#" + str(coppied_files+1) + "/" + str(num_files) + " Copying " + file + " to " + dest_file_path)
+            print("#" + str(copied_files+1) + "/" + str(num_files) + " Copying " + file + " to " + dest_file_path)
             shutil.copy2(src_file_path, dest_file_path)
-            print("Done copying #" + str(coppied_files+1) + "/" + str(num_files) )
-            coppied_files += 1
+            print("Done copying #" + str(copied_files+1) + "/" + str(num_files) )
+            copied_files += 1
         except shutil.Error as e:
             print("Error copying file: " + str(e))
             continue
-    print("Finished, copied " + str(coppied_files) + "/" + str(num_files) + " files")
-    summary_array.append("MEDIA: copied " + str(coppied_files) + "/" + str(num_files) + " files")
+    print("Finished, copied " + str(copied_files) + "/" + str(num_files) + " files")
+    summary_array.append("MEDIA: copied " + str(copied_files) + "/" + str(num_files) + " files")
 
 def import_panorama_and_hyperlapse():
     print("Importing Panoramas and Hyperlapses")
@@ -69,7 +69,7 @@ def import_panorama_and_hyperlapse():
 
         src_dir_path = os.path.join(src_dir, dir)
 
-        coppied_dirs = 0
+        copied_dirs = 0
         num_dirs = len(os.listdir(src_dir_path))
         print("Importing: " + dir + " " + str(num_dirs) + " directories")
 
@@ -101,15 +101,15 @@ def import_panorama_and_hyperlapse():
                 print("Copying " + sub_dir + " to " + dest_dir_path)
                 shutil.copytree(src_sub_dir_path, dest_dir_path, copy_function=shutil.copy2, dirs_exist_ok=False)
                 print("Done copying " + sub_dir)
-                coppied_dirs += 1
+                copied_dirs += 1
             except FileExistsError as e:
                 print("Error copying directory: " + str(e))
                 continue
             except shutil.Error as e:
                 print("Error copying directory: " + str(e))
                 continue
-        print("Finished " + dir + ", copied " + str(coppied_dirs) + "/" + str(num_dirs) + " directories")
-        summary_array.append(dir + ": copied " + str(coppied_dirs) + "/" + str(num_dirs) + " directories")
+        print("Finished " + dir + ", copied " + str(copied_dirs) + "/" + str(num_dirs) + " directories")
+        summary_array.append(dir + ": copied " + str(copied_dirs) + "/" + str(num_dirs) + " directories")
     print("Finished importing panoramas and hyperlapses")
 
 try:
