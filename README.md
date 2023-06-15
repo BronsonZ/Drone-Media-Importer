@@ -17,8 +17,10 @@ Given the correct source and destination path, it copies each image and video wi
 
 The groups of photos in panoramas and hyperlapses are kept in their corresponding folder.
 
-File names are not changed, though this could be added in the future.
+All files are renamed to include the date down to the minute before the original file name, e.g. `DJI_0120.DNG` would be renamed to `2023-6-13-1310 - DJI_0120.DNG`
+
+Panorama and hyperlapse folders are renamed to include the date and the files within the folders have that new root folder name added before their original file name.
 
 Any file name conflicts involving an existing file are skipped to avoid any unwanted overwrites. In the future this could be improved to check if the files are actually the same or if its just that their file names happen to be equal.
 
-I plan to update it and improve it over the next few days/weeks.
+I plan to update it and improve it over the next few weeks.
