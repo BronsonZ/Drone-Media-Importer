@@ -136,6 +136,14 @@ def import_panorama_or_hyperlapse(input_dir):
 
 def main():
     try:
+        if not os.path.exists(src_dir) or not os.path.isdir(src_dir):
+            print("Source directory " + src_dir + " does not exist or is not a directory")
+            input("Press enter to exit")
+            exit()
+        if not os.path.exists(dest_dir) or not os.path.isdir(dest_dir):
+            print("Destination directory " + dest_dir + " does not exist or is not a directory")
+            input("Press enter to exit")
+            exit()
         total_size = get_dir_size(src_dir)
         print("Total size to be coppied: " + str(round(total_size/1000000000, 1)) + "GBs")
         input("Press enter to continue, ctrl+c to exit")
