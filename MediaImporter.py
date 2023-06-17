@@ -5,6 +5,8 @@ import datetime
 src_dir = "H:\\DCIM"
 dest_dir = "E:\\Dropbox\\Drone Imports"
 
+temp_dir = os.path.join(dest_dir, "TEMP")
+
 summary_array = []
 
 def is_image(file_path):
@@ -48,6 +50,11 @@ def get_creation_time(file_path):
     day = str(creation_time.day) + ' - ' + creation_time.strftime("%A")
     return creation_time, year, month, day
 
+def equal_file_size(src_file_path, dest_file_path):
+    src_size = os.path.getsize(src_file_path)
+    dest_size = os.path.getsize(dest_file_path)
+    return src_size == dest_size
+
 def import_photos_and_videos():
     copied_files = 0
     media_src_dir = os.path.join(src_dir, "100MEDIA")
@@ -55,6 +62,11 @@ def import_photos_and_videos():
     print("Importing Photos/Videos: " + str(num_files) + " files")
     for file in os.listdir(media_src_dir):
         src_file_path = os.path.join(media_src_dir, file)
+
+        if not os.path.isfile(src_file_path):
+            print("Directory " + file + " is not a file, skipping")
+            num_files -= 1
+            continue
 
         creation_time, year, month, day = get_creation_time(src_file_path)
 
@@ -71,19 +83,24 @@ def import_photos_and_videos():
             continue
 
         if os.path.exists(dest_file_path):
-            print("File " + dest_file_path + " already exists, skipping")
-            continue
+            if equal_file_size(src_file_path, dest_file_path):
+                print("#" + str(copied_files+1) +" File " + dest_file_path + " already exists, skipping")
+                copied_files += 1
+                continue
+            else:
+                print("#" + str(copied_files+1) +" File " + dest_file_path + " already exists, but has different size, copying anyway, saving original file to temp folder")
+                make_dir(temp_dir)
+                temp_file_path = os.path.join(temp_dir, new_file_name)
+                copy_file(dest_file_path, temp_file_path)
 
         if not make_dir(os.path.dirname(dest_file_path)):
             continue
 
         print("#" + str(copied_files+1) + "/" + str(num_files) + " Copying " + file + " to " + dest_file_path)
         
-        if not copy_file(src_file_path, dest_file_path):
-            continue
-
-        print("Done copying #" + str(copied_files+1) + "/" + str(num_files) )
-        copied_files += 1
+        if copy_file(src_file_path, dest_file_path):
+            print("Done copying #" + str(copied_files+1) + "/" + str(num_files) )
+            copied_files += 1
 
     summary_array.append("MEDIA: copied " + str(copied_files) + "/" + str(num_files) + " files")
     print(summary_array[-1])
@@ -97,6 +114,11 @@ def import_panorama_or_hyperlapse(input_dir):
 
     for sub_dir in os.listdir(src_dir_path):
         src_sub_dir_path = os.path.join(src_dir_path, sub_dir)
+        
+        if not os.path.isdir(src_sub_dir_path):
+            print("File " + sub_dir + " is not a directory, skipping")
+            num_dirs -= 1
+            continue
 
         creation_time, year, month, day = get_creation_time(src_sub_dir_path)
 
@@ -112,20 +134,31 @@ def import_panorama_or_hyperlapse(input_dir):
             continue
 
         print("#" + str(copied_dirs+1) + "/" + str(num_dirs) + " Copying " + sub_dir + " to " + dest_dir_path)
+        success = True
         for file in os.listdir(src_sub_dir_path):
             src_file = os.path.join(src_sub_dir_path, file)
+
+            if not os.path.isfile(src_file):
+                print( file + " is not a file, skipping")
+                continue
+
             new_file_name = new_dir_name + " - " + file
             dest_file = os.path.join(dest_dir_path, new_file_name)
 
-            success = True
-
             if os.path.exists(dest_file):
-                print("File " + dest_file + " already exists, skipping")
-                continue
+                if equal_file_size(src_file, dest_file):
+                    print("File " + dest_file + " already exists, skipping")
+                    continue
+                else:
+                    print("File " + dest_file + " already exists, but has different size, copying anyway, saving original file to temp folder")
+                    make_dir(temp_dir)
+                    temp_file_path = os.path.join(temp_dir, new_file_name)
+                    copy_file(dest_file, temp_file_path)
             
             if not copy_file(src_file, dest_file):
                 success = False
                 continue
+
 
         if success:
             print("Fully copyied #" + str(copied_dirs+1) + "/" + str(num_dirs) )
@@ -140,13 +173,24 @@ def main():
             print("Source directory " + src_dir + " does not exist or is not a directory")
             input("Press enter to exit")
             exit()
-        if not os.path.exists(dest_dir) or not os.path.isdir(dest_dir):
-            print("Destination directory " + dest_dir + " does not exist or is not a directory")
-            input("Press enter to exit")
-            exit()
+        
         total_size = get_dir_size(src_dir)
-        print("Total size to be coppied: " + str(round(total_size/1000000000, 1)) + "GBs")
-        input("Press enter to continue, ctrl+c to exit")
+        print("Source directory: " + src_dir)
+        print("Destination directory: " + dest_dir)
+        print("Total size to be coppied: " + str(round(total_size/1000000000, 1)) + "GB")
+
+        valid_no = "n", "N", "no", "No", "NO"
+        valid_yes = "y", "Y", "yes", "Yes", "YES", ""
+
+        do_continue = input("Do you want to continue? (Y,n) :")
+
+        if do_continue in valid_no:
+            print("Program stopped")
+            exit()
+        elif do_continue not in valid_yes:
+            print("Invalid input, program stopped")
+            exit()
+
 
         import_photos_and_videos()
         import_panorama_or_hyperlapse("PANORAMA")
