@@ -167,6 +167,12 @@ def import_panorama_or_hyperlapse(input_dir):
     summary_array.append(input_dir + ": fully copied " + str(copied_dirs) + "/" + str(num_dirs) + " folders")
     print(summary_array[-1])
 
+def call_function(func, directory):
+    if os.path.exists(os.path.join(src_dir, directory)) and os.path.isdir(os.path.join(src_dir, directory)):
+        func()
+    else:
+        print("Directory " + directory + " does not exist or is not a directory, skipping")
+
 def main():
     try:
         if not os.path.exists(src_dir) or not os.path.isdir(src_dir):
@@ -177,7 +183,7 @@ def main():
         total_size = get_dir_size(src_dir)
         print("Source directory: " + src_dir)
         print("Destination directory: " + dest_dir)
-        print("Total size to be coppied: " + str(round(total_size/1000000000, 1)) + "GB")
+        print("Total size to be copied: " + str(round(total_size/1000000000, 1)) + "GB")
 
         valid_no = "n", "N", "no", "No", "NO"
         valid_yes = "y", "Y", "yes", "Yes", "YES", ""
@@ -191,14 +197,18 @@ def main():
             print("Invalid input, program stopped")
             exit()
 
-
-        import_photos_and_videos()
-        import_panorama_or_hyperlapse("PANORAMA")
-        import_panorama_or_hyperlapse("HYPERLAPSE")
+        call_function(import_photos_and_videos, "100MEDIA")
+        call_function(import_panorama_or_hyperlapse, "PANORAMA")
+        call_function(import_panorama_or_hyperlapse, "HYPERLAPSE")
 
         print("Summary:")
-        for line in summary_array:
-            print(line)
+        if summary_array == []:
+            print("Nothing was copied")
+            input("Press enter to exit")
+            exit()
+        else:
+            for line in summary_array:
+                print(line)
         
         input("Program finished, press enter to exit")
         exit()
