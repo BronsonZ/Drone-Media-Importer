@@ -2,10 +2,9 @@ import os
 import shutil
 import datetime
 
-src_dir = "H:\\DCIM"
-dest_dir = "E:\\Dropbox\\Drone Imports"
-
-temp_dir = os.path.join(dest_dir, "TEMP")
+src_dir = str()
+dest_dir = str()
+temp_dir = str()
 
 summary_array = []
 
@@ -167,7 +166,7 @@ def import_panorama_or_hyperlapse(input_dir):
     summary_array.append(input_dir + ": fully copied " + str(copied_dirs) + "/" + str(num_dirs) + " folders")
     print(summary_array[-1])
 
-def call_function(func, directory):
+def call_function_with_directory(func, directory):
     if os.path.exists(os.path.join(src_dir, directory)) and os.path.isdir(os.path.join(src_dir, directory)):
         func()
     else:
@@ -175,6 +174,18 @@ def call_function(func, directory):
 
 def main():
     try:
+        global src_dir
+        global dest_dir
+        global temp_dir
+
+        src_dir_letter = input("Enter the drive letter of the source drive: ").upper()
+        src_dir = src_dir_letter + ":\\DCIM"
+        
+        dest_dir_letter = input("Enter the drive letter of the destination drive: ").upper()
+        dest_dir = dest_dir_letter + ":\\Dropbox\\Drone Imports"
+
+        temp_dir = os.path.join(dest_dir, "TEMP")
+
         if not os.path.exists(src_dir) or not os.path.isdir(src_dir):
             print("Source directory " + src_dir + " does not exist or is not a directory")
             input("Press enter to exit")
@@ -185,21 +196,21 @@ def main():
         print("Destination directory: " + dest_dir)
         print("Total size to be copied: " + str(round(total_size/1000000000, 1)) + "GB")
 
-        valid_no = "n", "N", "no", "No", "NO"
-        valid_yes = "y", "Y", "yes", "Yes", "YES", ""
+        valid_no_input = "n", "N", "no", "No", "NO"
+        valid_yes_input = "y", "Y", "yes", "Yes", "YES", ""
 
         do_continue = input("Do you want to continue? (Y,n) :")
 
-        if do_continue in valid_no:
+        if do_continue in valid_no_input:
             print("Program stopped")
             exit()
-        elif do_continue not in valid_yes:
+        elif do_continue not in valid_yes_input:
             print("Invalid input, program stopped")
             exit()
 
-        call_function(import_photos_and_videos, "100MEDIA")
-        call_function(import_panorama_or_hyperlapse, "PANORAMA")
-        call_function(import_panorama_or_hyperlapse, "HYPERLAPSE")
+        call_function_with_directory(import_photos_and_videos, "100MEDIA")
+        call_function_with_directory(import_panorama_or_hyperlapse, "PANORAMA")
+        call_function_with_directory(import_panorama_or_hyperlapse, "HYPERLAPSE")
 
         print("Summary:")
         if summary_array == []:
