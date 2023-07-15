@@ -88,7 +88,8 @@ def import_photos_and_videos():
                 continue
             else:
                 print("#" + str(copied_files+1) +" File " + dest_file_path + " already exists, but has different size, copying anyway, saving original file to temp folder")
-                make_dir(temp_dir)
+                if not make_dir(temp_dir):
+                    continue
                 temp_file_path = os.path.join(temp_dir, new_file_name)
                 copy_file(dest_file_path, temp_file_path)
 
