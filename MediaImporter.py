@@ -18,8 +18,8 @@ def is_video(file_path):
 
 def get_dir_size(path):
     total = 0
-    with os.scandir(path) as it:
-        for entry in it:
+    with os.scandir(path) as dir:
+        for entry in dir:
             if entry.is_file():
                 total += entry.stat().st_size
             elif entry.is_dir():
@@ -54,9 +54,9 @@ def equal_file_size(src_file_path, dest_file_path):
     dest_size = os.path.getsize(dest_file_path)
     return src_size == dest_size
 
-def import_photos_and_videos():
+def import_photos_and_videos(input_dir):
     copied_files = 0
-    media_src_dir = os.path.join(src_dir, "100MEDIA")
+    media_src_dir = os.path.join(src_dir, input_dir)
     num_files = len(os.listdir(media_src_dir))
     print("Importing Photos/Videos: " + str(num_files) + " files")
     for file in os.listdir(media_src_dir):
@@ -87,7 +87,7 @@ def import_photos_and_videos():
                 copied_files += 1
                 continue
             else:
-                print("#" + str(copied_files+1) +" File " + dest_file_path + " already exists, but has different size, copying anyway, saving original file to temp folder")
+                print("#" + str(copied_files+1) +" File " + dest_file_path + " already exists, but has different size, copying anyway, saving original file to " + temp_dir)
                 if not make_dir(temp_dir):
                     continue
                 temp_file_path = os.path.join(temp_dir, new_file_name)
@@ -102,7 +102,7 @@ def import_photos_and_videos():
             print("Done copying #" + str(copied_files+1) + "/" + str(num_files) )
             copied_files += 1
 
-    summary_array.append("MEDIA: copied " + str(copied_files) + "/" + str(num_files) + " files")
+    summary_array.append("Photos/Videos: copied " + str(copied_files) + "/" + str(num_files) + " files")
     print(summary_array[-1])
 
 def import_panorama_or_hyperlapse(input_dir):
@@ -168,8 +168,8 @@ def import_panorama_or_hyperlapse(input_dir):
     print(summary_array[-1])
 
 def call_function_with_directory(func, directory):
-    if os.path.exists(os.path.join(src_dir, directory)) and os.path.isdir(os.path.join(src_dir, directory)):
-        func()
+    if os.path.isdir(os.path.join(src_dir, directory)):
+        func(directory)
     else:
         print("Directory " + directory + " does not exist or is not a directory, skipping")
 
@@ -197,16 +197,12 @@ def main():
         print("Destination directory: " + dest_dir)
         print("Total size to be copied: " + str(round(total_size/1000000000, 1)) + "GB")
 
-        valid_no_input = "n", "N", "no", "No", "NO"
         valid_yes_input = "y", "Y", "yes", "Yes", "YES", ""
 
         do_continue = input("Do you want to continue? (Y,n) :")
 
-        if do_continue in valid_no_input:
+        if do_continue not in valid_yes_input:
             print("Program stopped")
-            exit()
-        elif do_continue not in valid_yes_input:
-            print("Invalid input, program stopped")
             exit()
 
         call_function_with_directory(import_photos_and_videos, "100MEDIA")
